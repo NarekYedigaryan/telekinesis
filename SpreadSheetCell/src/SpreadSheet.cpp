@@ -1,50 +1,60 @@
 #include "../headers/SpreadSheet.h"
 
-    SpreadSheet::SpreadSheet()
-    :m_row{2}
-    ,m_col{2}
+
+    void SpreadSheet::allocator()
     {
-        cell=new Cell*[m_row];
+       cell=new Cell*[m_row];
      for (int i = 0; i < m_row; i++)
      {
         cell[i]=new Cell[m_col];
      }
-      
+    }
+
+    SpreadSheet::SpreadSheet()
+    :m_row{2}
+    ,m_col{2}
+    {
+      allocator();
     }
 
     SpreadSheet::SpreadSheet(int x)
     :m_row(x)
     ,m_col(x)
     {
-        cell=new Cell*[m_row];
-     for (int i = 0; i < m_row; i++)
-     {
-        cell[i]=new Cell[m_col];
-     }
+         allocator();
 
     }
+    SpreadSheet::SpreadSheet(std::initializer_list<Cell> arr) {
+    m_col = 5; 
+    m_row = (arr.size() + m_col - 1) / m_col; 
+
+    allocator(); 
+
+    int i = 0;
+    int j = 0;
+    for (auto& it : arr) {
+        cell[i][j] = it;
+        ++j;
+
+        if (j == m_col) {
+            ++i;
+            j = 0;
+        }
+    }
+}
 
     SpreadSheet::SpreadSheet(int x,int y)
     :m_row(x)
     ,m_col(y)
     {
-        cell=new Cell*[m_row];
-     for (int i = 0; i < m_row; i++)
-     {
-        cell[i]=new Cell[m_col];
-     }
-
+        allocator();
     }
 
     SpreadSheet::SpreadSheet(const SpreadSheet& other)
     :m_row{other.m_row}
     ,m_col{other.m_col}
     {
-        cell=new Cell*[m_row];
-     for (int i = 0; i < m_row; i++)
-     {
-        cell[i]=new Cell[m_col];
-     }
+       allocator();
 
     for (int i = 0; i < m_row; i++)
     {
@@ -61,12 +71,7 @@
     ,m_col{other.m_col}
     ,cell{other.cell}
     {
-        cell=new Cell*[m_row];
-        for (int i = 0; i < m_row; i++)
-        {
-           cell[i]=new Cell[m_col];
-        }
-
+        allocator();
     for (int i = 0; i < m_row; i++)
     {
         for (int j = 0; j < m_col; j++)
@@ -123,16 +128,36 @@
 
     void SpreadSheet::add_row(int n)
     {
-       int new_row = m_row+n;
-       Cell** tmp=new Cell*[new_row];
-       for (int i = 0; i < new_row; i++)
+      resize(m_row+n,m_col);
+    }
+    void SpreadSheet::add_column(int n)
+    {
+      resize(m_row,m_col+n);
+    }
+    void SpreadSheet::resize_row(int n)
+    {
+      resize(n,m_col);
+    }
+    void SpreadSheet::resize_column(int n)
+    {
+      resize(m_row,n);
+    }
+    void SpreadSheet::resize(int n,int m)
+    {
+      int new_row=m_row;
+      int new_col=m_col;
+      int tmp_row=(n<=m_row)?n:new_row;
+      int tmp_col=(m<=m_col)?m:new_col;
+     
+       Cell** tmp=new Cell*[n];
+       for (int i = 0; i < n; i++)
        {
-        cell[i]=new Cell[m_col];
+        tmp[i]=new Cell[m];
        }
 
-       for (int i = 0; i < m_row; i++)
+       for (int i = 0; i < tmp_row; i++)
        {
-        for (int j = 0; j < m_col; j++)
+        for (int j = 0; j < tmp_col; j++)
         {
             tmp[i][j]=cell[i][j];
         }
@@ -146,43 +171,65 @@
        delete[] cell;
        cell=tmp;
        tmp=nullptr;
-       m_row=new_row;
+       m_row=n;
+       m_col=m;
     }
-    // void SpreadSheet::add_column(int n)
-    // {
+    void SpreadSheet::delete_row(int n)
+    {
+       if(n>=m_row)
+       {
+         throw std::out_of_range(" out of range");
+       }
+       resize(m_row-n,m_col);
+    }
+    void SpreadSheet::delete_column(int n)
+    {
+        if(n>=m_col)
+       {
+         throw std::out_of_range(" out of range");
+       }
+       resize(m_row,m_col-n);
+    }
 
-    // }
-    // void SpreadSheet::resize_row(int n)
-    // {
+    void SpreadSheet::copy_from(int row,int col,const SpreadSheet& other )
+    {
+        this->resize(row,col);
+        for (size_t i = 0; i < row; ++i)
+        {
+           for (size_t j = 0; j < col; ++j)
+           {
+              cell[i][j]=other.cell[i][j];
+           }
+        }
+        
+    }
+    SpreadSheet& SpreadSheet::slice(int row,int col)
+    {
+         resize(m_row-row,m_col-col);
+         return *this;
+    }
 
-    // }
-    // void SpreadSheet::resize_column(int n)
-    // {
 
-    // }
-    // void SpreadSheet::resize(int n,int m)
-    // {
 
-    // }
-    // void SpreadSheet::delete_row(int n)
-    // {
 
-    // }
-    // void SpreadSheet::delete_column(int n)
-    // {
+void SpreadSheet::print()
+{
+   for (size_t i = 0; i < m_row; ++i)
+   {
+      for (size_t j = 0; j < m_col; ++j)
+      {
+         std::cout<<cell[i][j]<<" ";
+      }
+      std::cout<<std::endl;
+   }
+   
+}
 
-    // }
-
-    // void SpreadSheet::copy_from(int n,int m,const SpreadSheet& other )
-    // {
-
-    // }
-    // void SpreadSheet::slice(int row,int col)
-    // {
-
-    // }
-
-// std::ostream& SpreadSheet::operator<<(std::ostream& os,const SpreadSheet& s)
-// {
-
-// }
+void SpreadSheet::insert(int i, int j,Cell ob)
+{
+   if(i>=m_row || j>=m_col || i<0 || j<0)
+   {
+      throw std::out_of_range("out of range");
+   }
+   cell[i][j]=ob;
+}

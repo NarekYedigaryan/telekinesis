@@ -13,6 +13,7 @@ public:
     Cell(const std::string& value);
     Cell(const Cell& other);
     Cell(int value);
+    Cell(const char* ch);
     Cell(double value);
     Cell(Cell&& other) noexcept;
     ~Cell() = default;

@@ -13,6 +13,9 @@ Cell::Cell(Cell&& other) noexcept
 
 Cell::Cell(int value)
     : str(std::to_string(value)) {}
+Cell::Cell(const char* ch)
+:str(ch)
+{}
 
 Cell::Cell(double value)
     : str(std::to_string(value)) {}
@@ -38,6 +41,7 @@ Cell::operator int() const {
 Cell::operator double() const {
     return std::stod(str);
 }
+
 
 Cell::operator std::string() const {
     return str;
