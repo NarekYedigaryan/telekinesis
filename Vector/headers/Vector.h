@@ -11,12 +11,13 @@ class Vector
 {
 private:
     using size_type = std::size_t;
-    template<typename T>
     using value_type=T;
 private:
     size_type m_size;
     size_type m_cap;
     T* m_arr;
+
+    void realloc();
 
 public:
     Vector();
@@ -50,10 +51,9 @@ public:
     void resize( size_type count );
     void resize( size_type count, const T& value );
     constexpr void swap( Vector& other ) noexcept;  
-    void realloc();
 };
 
                  
-#include "Vector.hpp"
+#include "..\src\Vector.hpp"
 
 #endif //VECTOR_H

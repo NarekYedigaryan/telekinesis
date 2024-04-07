@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Vector.dir\\Release\\main.obj",
+            "outputs": [
+                "Vector.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}
