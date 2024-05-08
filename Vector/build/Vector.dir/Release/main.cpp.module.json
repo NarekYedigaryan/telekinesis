@@ -3,9 +3,9 @@
     "revision": 0,
     "rules": [
         {
-            "primary-output": "Vector.dir\\Release\\main.obj",
+            "primary-output": "vector.dir\\Release\\main.obj",
             "outputs": [
-                "Vector.dir\\Release\\"
+                "vector.dir\\Release\\"
             ],
             "requires": []
         }

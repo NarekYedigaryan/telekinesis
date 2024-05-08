@@ -1,35 +1,62 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef __STACK__H__
+#define __STACK__H__
 
-#include <vector>
 #include <initializer_list>
+#include <vector>
 
-
-
-template<typename T,typename Container=std::vector<T>>
-class Stack
+namespace g3
 {
-private:
-  using value_type=T;
-  using size_type=size_t;
-private:
-  Container m_arr;
-public:
-  Stack()=default;
-  Stack(const Stack& other);
-  Stack(Stack&& other);
-  Stack& operator=(const Stack& other);
-  Stack& operator=(Stack&& other);
-  Stack(std::initializer_list<value_type> arr);
-  ~Stack()=default;
-  void push(const value_type& elem);
-  void pop();
-  value_type& top();
-  size_t size();
-  void swap(const Stack& arr);
-  bool empty();
 
+template <typename T, typename Container = std::vector<T>>
+class stack
+{
+public:
+    using container_type = Container;
+    using value_type = T;
+    using size_type = std::size_t;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+
+public:
+   
+    stack();
+    stack(const stack& rhv);
+    stack(stack&& rhv);
+    stack(std::initializer_list<value_type> init);
+    template <typename InputIt>
+    stack(InputIt first, InputIt last);
+    ~stack() = default;
+
+    const stack& operator=(const stack<T, Container>& other);
+    const stack& operator=(stack&& rhv);
+    value_type* begin();
+    value_type* end();
+public:
+    reference top();
+    const_reference top() const;
+
+    bool empty() const;
+    size_type size() const;
+
+    void push(const_reference val);
+    void pop();
+
+public:
+
+    bool operator==(const stack& other);
+    bool operator!=(const stack& other);
+    bool operator<(const stack& other);
+    bool operator<=(const stack& other);
+    bool operator>(const stack& other);
+    bool operator>=(const stack& other);
+
+
+private:
+    Container m_arr;
 };
 
-#include "Stack.hpp"
-#endif //STACK_H
+
+}
+
+#include "../src/stack.hpp"
+#endif

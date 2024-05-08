@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/User/Desktop/telekinesis/SpreadSheetCell/src",
-      "program": "c:/Users/User/Desktop/telekinesis/SpreadSheetCell/src/build/Debug/outDebug",
+      "cwd": "c:/Users/User/Desktop/telekinesis/Vector/src",
+      "program": "c:/Users/User/Desktop/telekinesis/Vector/src/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

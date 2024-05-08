@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\User\Desktop\telekinesis\Vector\src\main.cpp">
+    <ClCompile Include="C:\Users\User\Desktop\telekinesis\vector\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\Desktop\telekinesis\Vector\headers\Vector.h">
+    <ClInclude Include="C:\Users\User\Desktop\telekinesis\vector\src\vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\User\Desktop\telekinesis\Vector\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\User\Desktop\telekinesis\vector\CmakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{31C347E2-DD62-33FB-8B83-A436CDA1CFFA}</UniqueIdentifier>
+      <UniqueIdentifier>{AA48ED20-D352-3F17-9DB7-EA8AE737DB08}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{51B87E37-A168-3C02-B8B1-FD598E7EFCCE}</UniqueIdentifier>
+      <UniqueIdentifier>{8641EC45-7DC7-36BC-A6A0-129FD432B583}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
