@@ -5,12 +5,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include_directories(headers)
 
 set(SRC_FILES
-    "src/main.cpp"  
-    "src/vector.hpp" 
+    "src/main.cpp"
 )
 
 set(HDR_FILES
-    "headers/g3/vector.h"
+    "headers/vector.h"
+    "src/vector.hpp" 
 )
 
 add_executable(vector ${SRC_FILES})

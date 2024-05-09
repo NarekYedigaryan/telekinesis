@@ -29,8 +29,6 @@ public:
 
     const stack& operator=(const stack<T, Container>& other);
     const stack& operator=(stack&& rhv);
-    value_type* begin();
-    value_type* end();
 public:
     reference top();
     const_reference top() const;

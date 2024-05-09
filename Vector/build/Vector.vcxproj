@@ -319,7 +319,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ScanSourceForModuleDependencies Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ScanSourceForModuleDependencies>
       <ScanSourceForModuleDependencies Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ScanSourceForModuleDependencies>
     </ClCompile>
-    <ClInclude Include="C:\Users\User\Desktop\telekinesis\vector\src\vector.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\User\Desktop\telekinesis\vector\build\ZERO_CHECK.vcxproj">

@@ -6,11 +6,11 @@ include_directories(headers)
 
 set(SRC_FILES
     "src/main.cpp"
-    "src/stack.hpp" 
 )
 
 set(HDR_FILES
-    "headers/g3/stack.h"
+    "headers/stack.h"
+    "src/stack.hpp" 
 )
 
 add_executable(stack ${SRC_FILES})

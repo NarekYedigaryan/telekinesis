@@ -6,17 +6,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\Desktop\telekinesis\vector\src\vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="C:\Users\User\Desktop\telekinesis\vector\CmakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{AA48ED20-D352-3F17-9DB7-EA8AE737DB08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{8641EC45-7DC7-36BC-A6A0-129FD432B583}</UniqueIdentifier>
     </Filter>

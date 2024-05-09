@@ -25,7 +25,7 @@ template <typename T, typename Allocator>
 vector<T, Allocator>::vector(vector&& rhv)
 :size_(rhv.size())
 ,capacity_(rhv.capacity())
-,arr_(rhv.arr_)
+,arr_(std::__exchange(rhv.arr_,nullptr))
 {
 }
     
@@ -291,6 +291,9 @@ template <typename T, typename Allocator>
 void vector<T, Allocator>::clear() noexcept
 {
   delete[] arr_;
+  arr_ = nullptr;
+  size_ = 0;
+  capacity_ = 0;
 }
 
 template <typename T, typename Allocator>

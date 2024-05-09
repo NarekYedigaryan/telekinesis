@@ -14,5 +14,7 @@ int main()
         st1.pop();
     }
     std::cout<<444;
+    std::cout<<444;
+    std::cout<<444;
     
 }
