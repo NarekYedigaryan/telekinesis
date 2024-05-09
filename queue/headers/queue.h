@@ -1,0 +1,63 @@
+#ifndef __QUEUE__H__
+#define __QUEUE__H__
+
+#include <vector>
+#include <initializer_list>
+
+namespace g3
+{
+
+template <typename T, typename Container = std::vector<T>>
+class queue
+{
+public:
+    using container_type = Container;
+    using value_type = T;
+    using size_type = std::size_t;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+
+public:
+    queue() = default;
+    queue(const queue& rhv);
+    queue(queue&& rhv);
+    queue(std::initializer_list<value_type> init);
+    template <typename InputIt>
+    queue(InputIt first, InputIt last);
+    ~queue() = default;
+
+    const queue& operator=(const queue& rhv);
+    const queue& operator=(queue&& rhv);
+
+public:
+    reference front();
+    const_reference front() const;
+
+    reference back();
+    const_reference back() const;
+
+    bool empty() const;
+    size_type size() const;
+
+    void push(const_reference val);
+    void pop();
+
+public:
+
+    bool operator==(const queue& other);
+    bool operator!=(const queue& other);
+    bool operator<(const queue& other);
+    bool operator<=(const queue& other);
+    bool operator>(const queue& other);
+    bool operator>=(const queue& other);
+
+
+private:
+    Container m_arr;
+};
+}
+#include "../src/queue.hpp"
+#endif
+
+
+
