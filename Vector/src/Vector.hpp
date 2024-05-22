@@ -13,11 +13,12 @@ template <typename T, typename Allocator>
 vector<T, Allocator>::vector(const vector& rhv) 
 : size_(rhv.size())
 , capacity_(rhv.capacity())
-, arr_(allocator_type().allocate(capacity_)) 
+, arr_(alloc_.allocate(capacity_)) 
 {
+
     for(size_type i = 0 ; i<size_ ; ++i)
-    {
-        this->arr_[i] = rhv.arr_[i];
+    {   
+         alloc_.construct(&this->arr_[i],rhv.arr_[i]);
     }
 }
 
@@ -29,51 +30,55 @@ vector<T, Allocator>::vector(vector&& rhv)
 {
 }
     
+
 template <typename T, typename Allocator>
 vector<T, Allocator>::vector(std::initializer_list<value_type> init)
-:size_(0)
-,capacity_(init.size())
-,arr_(allocator_type().allocate(capacity_))
+: size_(init.size())
+, capacity_(init.size())
+, arr_(alloc_.allocate(capacity_)) 
 {
-  for (const T& i : init)
-  {
-    push_back(i);
-  }
-  
+    size_type ind = 0;
+    for (const T& i : init)
+    {
+        alloc_.construct(&arr_[ind++], i); 
+    }
 }
+
 
 template <typename T, typename Allocator>
 vector<T, Allocator>::vector(size_type size, const_reference val)
     : size_(size), 
       capacity_(size), 
-      arr_(allocator_type().allocate(capacity_)) 
+      arr_(alloc_.allocate(capacity_)) 
 {
-    for (size_type i = 0; i < size_; ++i) {
-        arr_[i] = val;
+    for (size_type i = 0; i < size_; ++i) 
+    {
+        alloc_.construct(&this->arr_[i],val);
     }
 }
 
 template <typename T, typename Allocator>
 template <typename InputIt>
 vector<T, Allocator>::vector(InputIt first, InputIt last)
-:size_()
-,capacity_()
-,arr_ (nullptr)
+: size_()
+, capacity_()
+, arr_(nullptr)
 {
-
-    for (InputIt it = first; it != last; ++it) {
-        ++size_;
+    for (InputIt it = first; it != last; ++it) 
+    {
+        size_++;
     }
 
-    capacity_ = size_;
-    arr_ = allocator_type().allocate(capacity_);
+    capacity_ = size_; 
+    arr_ = alloc_.allocate(capacity_);
 
     size_type i = 0;
     for (InputIt it = first; it != last; ++it) 
     {
-        arr_[i++] = *it;
+        alloc_.construct(&arr_[i++], *it); 
     }
 }
+
 
     
 template <typename T, typename Allocator>
@@ -89,10 +94,10 @@ const vector<T, Allocator>& vector<T, Allocator>::operator=(const vector& rhv)
   {
     size_=rhv.size();
     capacity_=rhv.capacity();
-    arr_=allocator_type().allocate(capacity_) ;
+    arr_=alloc_.allocate(capacity_) ;
     for(size_type i = 0 ; i<size_ ; ++i)
     {
-        this->arr_[i] = rhv.arr_[i];
+         alloc_.construct(&this->arr_[i],rhv.arr_[i]);
     }
   }
     return *this;
@@ -115,20 +120,18 @@ const vector<T, Allocator>& vector<T, Allocator>::operator=(vector&& rhv)
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::allocator_type vector<T, Allocator>::get_allocator() 
 {
-    return allocator_type();
+    return alloc_;
 }
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::reference vector<T, Allocator>::at(size_type pos)
- {
-   if(pos>=size_ || pos<0)
+{
+   if(pos>=size_)
    {
      throw std::out_of_range("Not correct position ");
    }
-  std::cout<<"non const";
-
    return arr_[pos];
- }
+}
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::const_reference vector<T, Allocator>::at(size_type pos) const
@@ -137,8 +140,6 @@ typename vector<T, Allocator>::const_reference vector<T, Allocator>::at(size_typ
    {
      throw std::out_of_range("Not correct position ");
    }
-  std::cout<<"const";
-
    return arr_[pos];
 
  } 
@@ -159,25 +160,38 @@ typename vector<T, Allocator>::const_reference vector<T, Allocator>::operator[](
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::reference vector<T, Allocator>::front()
 {
-   return arr_[0];
+   if (size_ == 0) {
+        throw std::out_of_range("vector is empty");
+    }
+    return arr_[0];
 } 
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::const_reference vector<T, Allocator>::front() const
 {
-   return arr_[0];
+    if (size_ == 0) {
+        throw std::out_of_range("vector is empty");
+    }
+    return arr_[0];
 } 
 
 template <typename T, typename Allocator>
-typename vector<T, Allocator>::reference vector<T, Allocator>::back()
+typename vector<T, Allocator>::reference vector<T, Allocator>::back() 
 {
-   return arr_[size_-1];
-} 
+    if (size_ == 0) {
+        throw std::out_of_range("vector is empty");
+    }
+    return arr_[size_ - 1];
+}
+
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::const_reference vector<T, Allocator>::back() const
 {
-   return arr_[size_-1];
+    if (size_ == 0) {
+        throw std::out_of_range("vector is empty");
+    }
+    return arr_[size_ - 1];
 } 
 
 template <typename T, typename Allocator>
@@ -255,7 +269,7 @@ typename vector<T, Allocator>::const_iterator vector<T, Allocator>::crend() cons
 template <typename T, typename Allocator>
 bool  vector<T, Allocator>::empty() const
 {
-return size_==0;
+   return size_==0;
 }
    
 
@@ -272,29 +286,35 @@ typename vector<T, Allocator>::size_type vector<T, Allocator>::capacity() const
 }
 
 template <typename T, typename Allocator>
-void vector<T, Allocator>::reserve(size_type new_cap) 
-{
+void vector<T, Allocator>::reserve(size_type new_cap) {
     if (new_cap <= capacity_) {
-        return;
+        return; 
     }
-
-    T* tmp = allocator_type().allocate(new_cap);
+    size_type sizee = size_;
+    T* tmp = alloc_.allocate(new_cap);
     for (size_type i = 0; i < size_; ++i) {
-        tmp[i] = std::move(arr_[i]); 
+        alloc_.construct(&tmp[i], std::move(arr_[i]));
     }
-    allocator_type().deallocate(arr_, capacity_);
+    clear();
+
     arr_ = tmp;
     capacity_ = new_cap;
+    size_ = sizee;
 }
 
+
 template <typename T, typename Allocator>
-void vector<T, Allocator>::clear() noexcept
+void vector<T, Allocator>::clear() noexcept 
 {
-  delete[] arr_;
-  arr_ = nullptr;
-  size_ = 0;
-  capacity_ = 0;
+    for (size_type i = 0; i < size_; ++i) 
+    {
+        alloc_.destroy(&arr_[i]); 
+    }
+    alloc_.deallocate(arr_, capacity_); 
+    size_ = 0;
+    capacity_ = 0; 
 }
+
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::iterator vector<T, Allocator>::insert(const_iterator pos, const_reference val) 
@@ -377,7 +397,8 @@ void vector<T, Allocator>:: push_back(const_reference val)
 {
    if(size_==capacity_)
    {
-     reserve(capacity_*2);
+    capacity_ *= 2;
+     reserve(capacity_);
    }    
    arr_[size_]=val;
    ++size_;
@@ -386,44 +407,56 @@ void vector<T, Allocator>:: push_back(const_reference val)
 template <typename T, typename Allocator>
 void vector<T, Allocator>::pop_back() 
 {
-    if (size_ > 0) {
+    if (size_ > 0) 
+    {
+        alloc_.destroy(&arr_[size_]-1); 
         --size_; 
-        arr_[size_].~T(); 
     }
 }
 
 template <typename T, typename Allocator>
 void vector<T, Allocator>::resize(size_type new_size, const_reference val) 
 {
-    if (new_size < size_) {
+    if (new_size < size_) 
+    {
+        for (size_t i = size_ - 1; i >= new_size; --i) 
+        {
+            alloc_.destroy(&arr_[i]);
+        }
         size_ = new_size;
-    } else if (new_size > size_) {
+    } 
+    else if (new_size > size_) 
+    {
         if (new_size > capacity_) {
-            reserve(new_size); 
+            reserve(new_size);
         }
-        for (size_type i = size_; i < new_size; ++i) {
-            arr_[i] = val;
+        for (size_type i = size_; i < new_size; ++i) 
+        {
+           this->arr_[i]=val; 
         }
-        size_ = new_size; 
+        size_ = new_size;
     }
 }
 
+
 template <typename T, typename Allocator>
-bool vector<T, Allocator>::operator==(const vector& other) const
+bool vector<T, Allocator>::operator==(const vector& other) const 
 {
-  if(this->size() != other.size())
-  {
-    return false;
-  }
-  for (size_t i = 0; i < this->size(); i++)
-  {
-    if(this->arr_[i] != other.arr_[i])
+    if (size() != other.size()) 
     {
-      return false;
+        return false;
     }
-  }
-  return true;
+    for (size_type i = 0; i < other.size(); ++i) 
+    {
+        if (arr_[i] != other.arr_[i]) 
+        {
+            return false; 
+        }
+    }
+    
+    return true;
 }
+
 
 template <typename T, typename Allocator>
 bool vector<T, Allocator>::operator!=(const vector& other) const 
@@ -431,7 +464,8 @@ bool vector<T, Allocator>::operator!=(const vector& other) const
     if (size_ != other.size_) {
         return true;
     }
-    for (size_type i = 0; i < size_; ++i) {
+    for (size_type i = 0; i < size_; ++i) 
+    {
         if (arr_[i] != other.arr_[i]) {
             return true;
         }
@@ -493,7 +527,19 @@ int vector<T, Allocator>::compare(const vector& other) const
 template <typename T, typename Allocator>
 vector<T, Allocator>::const_iterator::const_iterator(pointer ptr)
     : ptr(ptr) {}
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::const_iterator&
+vector<T, Allocator>::const_iterator::operator=(const const_iterator& other) {
+    ptr = other.ptr;
+    return *this;
+}
 
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::const_iterator&
+vector<T, Allocator>::const_iterator::operator=(const_iterator&& other) {
+    ptr = std::move(other.ptr);
+    return *this;
+}
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::const_iterator
 vector<T, Allocator>::const_iterator::operator+(size_type n) const {
@@ -590,9 +636,31 @@ bool vector<T, Allocator>::const_iterator::operator>=(
     return ptr >= other.ptr;
 }
 
+
+
+
 template <typename T, typename Allocator>
 vector<T, Allocator>::iterator::iterator(pointer ptr)
     : const_iterator(ptr) {}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::iterator&
+vector<T, Allocator>::iterator::operator=(const iterator& other) {
+    if (this != &other) {
+        arr_ = other.arr_;
+    }
+    return *this;
+}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::iterator&
+vector<T, Allocator>::iterator::operator=(iterator&& other) {
+    if (this != &other) {
+        arr_ = std::move(other.arr_);
+    }
+    return *this;
+}
+
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::iterator
@@ -657,6 +725,27 @@ vector<T, Allocator>::iterator::operator[](size_type pos) const {
 template <typename T, typename Allocator>
 vector<T, Allocator>::const_reverse_iterator::const_reverse_iterator(pointer ptr)
     : ptr(ptr) {}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::const_reverse_iterator&
+vector<T, Allocator>::const_reverse_iterator::operator=(const const_reverse_iterator& other) {
+    if (this != &other) 
+    {
+        ptr = other.ptr;
+    }
+    return *this;
+}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::const_reverse_iterator&
+vector<T, Allocator>::const_reverse_iterator::operator=(const_reverse_iterator&& other) {
+    if (this != &other) 
+    {
+         ptr = std::move(other.ptr);
+    }
+    return *this;
+}
+
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::const_reverse_iterator
@@ -757,6 +846,24 @@ bool vector<T, Allocator>::const_reverse_iterator::operator>=(
 template <typename T, typename Allocator>
 vector<T, Allocator>::reverse_iterator::reverse_iterator(pointer ptr)
     : const_reverse_iterator(ptr) {}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::reverse_iterator&
+vector<T, Allocator>::reverse_iterator::operator=(const reverse_iterator& other) {
+    if (this != &other) {
+        ptr = other.ptr;
+    }
+    return *this;
+}
+
+template <typename T, typename Allocator>
+const typename vector<T, Allocator>::reverse_iterator&
+vector<T, Allocator>::reverse_iterator::operator=(reverse_iterator&& other) {
+    if (this != &other) {
+        ptr = std::move(other.ptr);
+    }
+    return *this;
+}
 
 template <typename T, typename Allocator>
 typename vector<T, Allocator>::reverse_iterator

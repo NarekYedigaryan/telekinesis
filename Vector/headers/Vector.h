@@ -111,6 +111,7 @@ private:
 private:
     size_type size_;
     size_type capacity_;
+    allocator_type alloc_;
     pointer arr_;
 
 };
@@ -128,8 +129,8 @@ public:
     const_iterator(const const_iterator&) = default;      
     const_iterator(const_iterator&&) = default;
 
-    const const_iterator& operator=(const const_iterator&) = default;      
-    const const_iterator& operator=(const_iterator&&) = default;
+    const const_iterator& operator=(const const_iterator&) ;      
+    const const_iterator& operator=(const_iterator&&) ;
 
     const_iterator operator+(size_type n) const;      
     const_iterator operator-(size_type n) const;
@@ -163,8 +164,8 @@ public:
     iterator(const iterator&) = default;      
     iterator(iterator&&) = default;
 
-    const iterator& operator=(const iterator&) = default;      
-    const iterator& operator=(iterator&&) = default;
+    const iterator& operator=(const iterator&);      
+    const iterator& operator=(iterator&&);
 
     iterator operator+(size_type n) const;      
     iterator operator-(size_type n) const;
@@ -194,8 +195,8 @@ public:
     const_reverse_iterator(const const_reverse_iterator&) = default;      
     const_reverse_iterator(const_reverse_iterator&&) = default;
 
-    const const_reverse_iterator& operator=(const const_reverse_iterator&) = default;      
-    const const_reverse_iterator& operator=(const_reverse_iterator&&) = default;
+    const const_reverse_iterator& operator=(const const_reverse_iterator&);      
+    const const_reverse_iterator& operator=(const_reverse_iterator&&);
 
     const_reverse_iterator operator+(size_type n) const;      
     const_reverse_iterator operator-(size_type n) const;
@@ -229,8 +230,8 @@ public:
     reverse_iterator(const reverse_iterator&) = default;      
     reverse_iterator(reverse_iterator&&) = default;
 
-    const reverse_iterator& operator=(const reverse_iterator&) = default;      
-    const reverse_iterator& operator=(reverse_iterator&&) = default;
+    const reverse_iterator& operator=(const reverse_iterator&);      
+    const reverse_iterator& operator=(reverse_iterator&&);
 
     reverse_iterator operator+(size_type n) const;      
     reverse_iterator operator-(size_type n) const;
