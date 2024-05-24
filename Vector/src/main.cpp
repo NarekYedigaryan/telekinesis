@@ -4,7 +4,7 @@ using namespace g3;
 
 int main()
 {
-    vector<int> arr={99,1,2,9,3,4,5};
+    vector<int> arr={99,1,2,9,3,4};
     vector<int> arr5(arr.begin(),arr.end());
     // std::cout<<*arr.begin();
     // arr.push_back(9);
