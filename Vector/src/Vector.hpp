@@ -21,18 +21,21 @@ vector<T, Allocator>::vector(const vector& rhv)
 
     for(size_type i = 0 ; i<size_ ; ++i)
     {   
-         alloc_.construct(&this->arr_[i],rhv.arr_[i]);
+        new(&arr_[i]) T(rhv.arr_[i]);
     }
 }
 
-// template <typename T, typename Allocator>
-// vector<T, Allocator>::vector(vector&& rhv)
-// :size_(rhv.size())
-// ,capacity_(rhv.capacity())
-// ,arr_(std::__exchange(rhv.arr_,nullptr))
-// {
-// }
-    
+template <typename T, typename Allocator>
+vector<T, Allocator>::vector(vector&& rhv)
+    : size_(rhv.size_)
+    , capacity_(rhv.capacity_)
+    , arr_(std::move(rhv.arr_))
+{
+    rhv.size_ = 0; 
+    rhv.capacity_ = 0; 
+    rhv.arr_ = nullptr; 
+}
+
 
 template <typename T, typename Allocator>
 vector<T, Allocator>::vector(std::initializer_list<value_type> init)
@@ -41,10 +44,9 @@ vector<T, Allocator>::vector(std::initializer_list<value_type> init)
 , arr_(alloc_.allocate(capacity_)) 
 {
     size_type ind = 0;
-    for (const T& i : init)
-    {
-        alloc_.construct(&arr_[ind++], i); 
-    }
+    for (const T& i : init) {
+            new(&arr_[ind++]) T(i);  
+        }
 }
 
 
@@ -78,8 +80,9 @@ vector<T, Allocator>::vector(InputIt first, InputIt last)
     size_type i = 0;
     for (InputIt it = first; it != last; ++it) 
     {
-        alloc_.construct(&arr_[i++], it); 
+       std::allocator_traits<Allocator>::construct(alloc_, &arr_[i++], it);
     }
+
 }
 
 
@@ -100,7 +103,7 @@ const vector<T, Allocator>& vector<T, Allocator>::operator=(const vector& rhv)
     arr_=alloc_.allocate(capacity_) ;
     for(size_type i = 0 ; i<size_ ; ++i)
     {
-         alloc_.construct(&this->arr_[i],rhv.arr_[i]);
+        new(&this->arr_[i]) T(rhv.arr_[i]);
     }
   }
     return *this;
@@ -288,22 +291,23 @@ typename vector<T, Allocator>::size_type vector<T, Allocator>::capacity() const
     return capacity_;
 }
 
-template <typename T, typename Allocator>
-void vector<T, Allocator>::reserve(size_type new_cap) {
-    if (new_cap <= capacity_) {
-        return; 
-    }
-    size_type sizee = size_;
-    T* tmp = alloc_.allocate(new_cap);
-    for (size_type i = 0; i < size_; ++i) {
-        alloc_.construct(&tmp[i], std::move(arr_[i]));
-    }
-    clear();
+    template <typename T, typename Allocator>
+    void vector<T, Allocator>::reserve(size_type new_cap) {
+        if (new_cap <= capacity_) {
+            return; 
+        }
+        size_type sizee = size_;
+        T* tmp = alloc_.allocate(new_cap);
+        for (size_type i = 0; i < size_; ++i) {
+            
+             std::allocator_traits<Allocator>::construct(alloc_, &tmp[i], std::move(arr_[i]));
+        }
+        clear();
 
-    arr_ = tmp;
-    capacity_ = new_cap;
-    size_ = sizee;
-}
+        arr_ = tmp;
+        capacity_ = new_cap;
+        size_ = sizee;
+    }
 
 
 template <typename T, typename Allocator>
@@ -311,7 +315,7 @@ void vector<T, Allocator>::clear() noexcept
 {
     for (size_type i = 0; i < size_; ++i) 
     {
-        alloc_.destroy(&arr_[i]); 
+       std::allocator_traits<Allocator>::destroy(alloc_, &arr_[i]);
     }
     alloc_.deallocate(arr_, capacity_); 
     size_ = 0;
@@ -431,7 +435,7 @@ void vector<T, Allocator>::pop_back()
 {
     if (size_ > 0) 
     {
-        alloc_.destroy(&arr_[size_]-1); 
+        std::allocator_traits<Allocator>::destroy(alloc_, &arr_[size_ - 1]);  
         --size_; 
     }
 }
@@ -443,7 +447,7 @@ void vector<T, Allocator>::resize(size_type new_size, const_reference val)
     {
         for (size_t i = size_ - 1; i >= new_size; --i) 
         {
-            alloc_.destroy(&arr_[i]);
+            std::allocator_traits<Allocator>::destroy(alloc_, &arr_[i]);
         }
         size_ = new_size;
     } 

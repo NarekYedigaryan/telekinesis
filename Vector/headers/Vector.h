@@ -29,7 +29,7 @@ public:
 
     vector();
     vector(const vector& rhv);
-    // vector(vector&& rhv);
+    vector(vector&& rhv);
     vector(std::initializer_list<value_type> init);
     vector(size_type size, const_reference val = value_type{});
     template <typename InputIt>
