@@ -29,7 +29,7 @@ public:
 
     vector();
     vector(const vector& rhv);
-    vector(vector&& rhv);
+    // vector(vector&& rhv);
     vector(std::initializer_list<value_type> init);
     vector(size_type size, const_reference val = value_type{});
     template <typename InputIt>
@@ -134,6 +134,8 @@ public:
 
     const_iterator operator+(size_type n) const;      
     const_iterator operator-(size_type n) const;
+    size_type operator-(const_iterator other) const;
+    
 
     const_iterator& operator++();
     const_iterator operator++(int);
@@ -169,7 +171,7 @@ public:
 
     iterator operator+(size_type n) const;      
     iterator operator-(size_type n) const;
-
+    size_type operator-(const_iterator n) const;
     iterator& operator++();
     iterator operator++(int);
     iterator& operator--();
@@ -222,8 +224,10 @@ public:
 template <typename T, typename Allocator>
 class vector<T, Allocator>::reverse_iterator : vector<T, Allocator>::const_reverse_iterator
 {
+
     friend class vector<T, Allocator>;
 private:
+
     reverse_iterator(pointer ptr);
 public:
     reverse_iterator() = default;
@@ -245,6 +249,8 @@ public:
     pointer operator->();
 
     reference operator[](size_type pos) const;
+    protected:
+    pointer ptr;
 };
 
 #include "../src/vector.hpp"

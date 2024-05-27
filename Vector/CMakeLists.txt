@@ -1,18 +1,31 @@
-cmake_minimum_required(VERSION 3.29.0)
-project(vector)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+cmake_minimum_required(VERSION 3.10)
+project(Nvector)
 
-include_directories(headers)
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
-set(SRC_FILES
-    "src/main.cpp"
-)
+add_executable(Nvector ../src/main.cpp)
 
-set(HDR_FILES
-    "headers/vector.h"
-    "src/vector.hpp" 
-)
+set_property(TARGET Nvector PROPERTY CXX_STANDARD 20)
 
-add_executable(vector ${SRC_FILES})
+target_include_directories(Nvector PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/src )
 
-set_property(TARGET vector PROPERTY CXX_STANDARD 20)
+
+target_compile_options(Nvector PRIVATE)
+
+if(NOT CMAKE_GENERATOR MATCHES "Visual Studio")
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/compile_commands.json ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
+        DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+        COMMENT "Copying compile_commands.json..."
+    )
+    add_custom_target(copy_compile_commands ALL
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
+    )
+endif()
+
+
+
+
